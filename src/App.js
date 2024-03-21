@@ -39,8 +39,8 @@ export default function App() {
       clickActions: [
         {
           type: "BTN",
-          label: "Cancel transaction",
-          deeplink: "modernapp://account",
+          label: "Cancel",
+          deeplink: "modernapp://restart",
         },
         { type: "BTN", label: "Edit", deeplink: "modernapp://dismiss-error" },
       ],
@@ -54,8 +54,7 @@ export default function App() {
       source: "Mobiliti",
       lang: "EN",
       header: "An error has occurred",
-      message:
-        "If you were doing a financial transaction, please check your account balance and latest transactions to prevent duplicating transaction.",
+      message: "Toast error message.",
       layoutType: "Toast",
       clickActions: [
         { type: "BTN", label: "OK", deeplink: "modernapp://restart" },
@@ -107,10 +106,10 @@ export default function App() {
   function sendErrorCallback(json) {
     const os = getMobileOperatingSystem();
     if (os === "Android" && window.kyc !== undefined) {
-      window.kyc.exceptionCallback(json);
+      window.kyc.exceptionCallback(JSON.stringify(json).toString());
     } else if (os === "iOS" && window.webkit !== undefined) {
       window.webkit.messageHandlers.exceptionCallback.postMessage(
-        JSON.stringify(json)
+        JSON.stringify(json.error !== undefined ? json.error : json)
       );
     }
   }
